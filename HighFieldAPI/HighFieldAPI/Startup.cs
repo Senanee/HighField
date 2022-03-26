@@ -48,7 +48,8 @@ namespace HighFieldAPI
                         builder
                           .AllowAnyOrigin()
                           .AllowAnyMethod()
-                          .AllowAnyHeader();
+                          .AllowAnyHeader()
+                          .WithExposedHeaders(new string[] { "totalAmountOfRecords" });
                         });
             });
 

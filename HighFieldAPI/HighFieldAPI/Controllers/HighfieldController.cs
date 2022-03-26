@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using HighFieldAPI.Dto;
+using HighFieldAPI.Extensions;
 using HighFieldAPI.Logic;
 using HighFieldAPI.Models;
 using HighFieldAPI.Models.API;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace HighFieldAPI.Controllers
@@ -30,18 +32,19 @@ namespace HighFieldAPI.Controllers
         
 
         [HttpGet] //api/highfield
-        public async Task<ActionResult<List<UserDto>>> Get()
+        public async Task<ActionResult<List<UserDto>>> Get([FromQuery] PaginationDto paginationDto)
         {
             Logger.LogInformation("Getting all the users");
             using (var highfieldRepository = new HighfielsApiRepository(HighfieldSettings))
             {
-               var users= await highfieldRepository.GetUsersAsync();
+               var users=( await highfieldRepository.GetUsersAsync()).AsQueryable();
                 if (users == null)
                 {
                     return NotFound();
                 }
-
-                return mapper.Map<List<UserDto>>(users);
+                await HttpContext.InsertParametersPaginationInHeader(users);
+                var result = users.OrderBy(x => x.FirstName).ThenBy(x=>x.LastName).Paginate(paginationDto).ToList();
+                return mapper.Map<List<UserDto>>(result);
             }  
            
         }
