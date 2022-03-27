@@ -72,7 +72,7 @@ namespace HighFieldAPI.Controllers
         }
         [Route("[action]", Name = "getColours")]
         [HttpGet]
-        public async Task<ActionResult<List<TopColoursDto>>> Getcolours()
+        public async Task<ActionResult<List<TopColoursDto>>> Getcolours([FromQuery] PaginationDto paginationDto)
         {
             Logger.LogInformation("Getting all the colours");
             using (var highfieldRepository = new HighfielsApiRepository(HighfieldSettings))
@@ -82,13 +82,18 @@ namespace HighFieldAPI.Controllers
                 {
                     return NotFound();
                 }
+                
                 var response = new HighfieldResponse(users, mapper);
                 if (response == null)
                 {
                     return NotFound();
                 }
+                var topColours = (response.TopColours).AsQueryable();
+                await HttpContext.InsertParametersPaginationInHeader(topColours);
 
-                return response.TopColours;
+                var result = topColours.OrderByDescending(x => x.Count).ThenBy(x => x.Colour).Paginate(paginationDto).ToList();
+
+                return result;
             }
 
         }
