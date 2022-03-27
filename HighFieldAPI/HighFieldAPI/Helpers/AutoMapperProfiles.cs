@@ -17,8 +17,7 @@ namespace HighFieldAPI.Helpers
                 .ForMember(x => x.AgePlusTwenty, dto => dto.MapFrom(prop => (DateTime.Now.Year - prop.Dob.Value.Year) + 20));
 
             CreateMap<UserDto, HighFieldUserEntity>().ReverseMap()
-                 .ForMember(destinationMember: x => x.AgePlusTwentyDto, memberOptions: options => options
-                 .MapFrom(s => s))
+                 //.ForMember(destinationMember: x => x.AgePlusTwentyDto, memberOptions: options => options.MapFrom(s => s))
                 .ForMember(x => x.OriginalAge, dto => dto.MapFrom(prop => (DateTime.Now.Year - prop.Dob.Value.Year)))
                 .ForMember(x => x.AgePlusTwenty, dto => dto.MapFrom(prop => (DateTime.Now.Year - prop.Dob.Value.Year) + 20));
 

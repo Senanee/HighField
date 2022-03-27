@@ -10,11 +10,12 @@ namespace HighFieldAPI.Extensions
     {
         public static HttpClient CreateHighfieldClient(this HighfielsApiRepository highFieldsApiRepository)
         {
-            var client = new HttpClient();
-            client.BaseAddress = new Uri(highFieldsApiRepository.HighfieldSettings.BaseUrl);
+            var client = new HttpClient
+            {
+                BaseAddress = new Uri(highFieldsApiRepository.HighfieldSettings.BaseUrl)
+            };
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", treeNationApiRepository.TreeNationSettings.ApiKey);
             return client;
         }
 

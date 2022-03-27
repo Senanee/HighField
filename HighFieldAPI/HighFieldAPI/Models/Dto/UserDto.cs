@@ -20,7 +20,7 @@ namespace HighFieldAPI.Models.Dto
 
         public string FavouriteColour { get; set; }
 
-        public AgePlusTwentyDto AgePlusTwentyDto { get; set; }
+        //public AgePlusTwentyDto AgePlusTwentyDto { get; set; }
 
         public int OriginalAge { get; set; }
 
